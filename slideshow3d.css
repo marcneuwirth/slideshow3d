@@ -1,0 +1,59 @@
+body {
+	background-color: black;
+	color: white;
+	font-family: "Lucida Grande", Verdana, Arial;
+	font-size: 12px;
+	background: #000;
+}
+.no-csstransforms3d #container {
+	display: none;
+}
+
+.csstransforms3d #no-support {
+	display: none;
+}
+
+
+
+#container {
+	width: 100%;
+	overflow: hidden;
+   
+   -o-perspective: 1000;
+	-moz-perspective: 1000;
+	-webkit-perspective: 1000;
+	perspective: 1000;
+	
+   -o-perspective-origin: 50% 20%;
+	-moz-perspective-origin: 50% 20%;
+	-webkit-perspective-origin: 50% 20%;
+	perspective-origin: 50% 20%;
+}
+
+#stage {
+	width: 100%;
+	margin-top: 200px;
+	padding-bottom: 100px;
+	
+	-o-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+#shape {
+	margin: 0 auto;
+	height: 240px;
+	width: 240px;
+	list-style: none;
+	
+	-o-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	
+	-o-transition-duration: 1s;
+	-moz-transition-duration: 1s;
+	-webkit-transition-duration: 1s;
+	transition-duration: 1s;
+}

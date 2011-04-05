@@ -1,0 +1,79 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+	<title>Slideshow using CSS3 3D Transforms | Marc Neuwirth</title> 
+	<link rel="stylesheet" href="slideshow3d.css" type="text/css" media="screen" />
+	<meta name="description" content="An example photo slideshow using css3 3d transformations">
+	<meta name="author" content="Marc Neuwirth">
+	<script src="modernizr-1.7.min.js"></script>
+</head> 
+<body> 
+	<h1>Slideshow using CSS3 3D Transforms</h1>
+	<div id="container"> 
+		<label for="search">Search Term</label><input id="search" name="search" type="text" value="puppy"/>
+		<label for="per_page">Number of Pictures</label><input id="per_page" name="per_page" type="text" value="16"/>
+		<input type="button" id="submit" value="Change" />
+		<div id="stage"> 
+			<ul id="shape"></ul>
+		</div> 
+	</div>   
+	<div id="no-support">
+		<img src="http://marcneuwirth.com/wp-content/uploads/2011/04/slideshow3d.jpg" alt="3D Slideshow using CSS3 Transforms" title="slideshow3d" width="600" height="215"/>
+		<p>Unfortunately, your browser doesn't support 3D CSS Transforms yet.</p>
+		<p>If you are using Chrome, try going opening 'about:flags' in the address bar and enabling 'GPU Accelerated Compositing'</p>
+		
+	</div>
+	
+</body> 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+<script type="text/javascript" src="slideshow3d.js"></script>
+<script>			
+function setup(options) {
+    var apiKey = '8e7f6c451992a0638f95d22e46a95eb1',
+        search = escape($('#search').val()),
+        per_page = parseInt($('#per_page').val());
+
+    $.getJSON('http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&text=' + search + '&format=json&sort=interestingness-desc&page=2&per_page=' + per_page + '&jsoncallback=?', function (data) {
+        var length = data.photos.photo.length;
+        while (length--) {
+            var item = data.photos.photo[length];
+            var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg';
+
+            var li = $('<li />');
+
+            var img = $('<img />').attr('src', photoURL);
+
+            li.append(img);
+            li.appendTo('#shape');
+        }
+
+        slideshow3d.init(options);
+    });
+}
+
+$(document).ready(function () {
+	var options = {
+        'container': '#shape',
+        'stage': '#stage',
+        'class': 'zoomTarget',
+        'transition': '2',
+        'hidden': false
+    };
+    setup(options);
+
+    $('#submit').click(function () {
+		slideshow3d.reset(options);
+        setup(options);
+    });
+	
+	$('input').bind('keypress', function (e) {
+		var code = e.keyCode || e.which;
+		if(code == 13) {
+			slideshow3d.reset(options);
+			setup(options);
+		}
+	});
+});			
+</script>
+</html> 
