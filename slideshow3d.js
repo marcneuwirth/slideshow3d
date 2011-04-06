@@ -1,11 +1,51 @@
 window.slideshow3d = function ($) {
 	var transformClass = null,
-		children = null,
-		stage = null,
 		addClass = null,
+		flat = null,
+		helix = null,
+		rows = null,
+		vertical = null,
 		setup = {
+			getShape: function(type){
+				switch(type){
+					case 'vertical':
+						return {
+							'vertical': true
+						};
+						break;
+					case 'cylinder':
+						return {
+							'rows': 2
+						};
+						break;
+					case 'ribbon':
+						return {
+							'flat': false,
+							'helix': 1
+						};
+						break;
+					case 'double helix':
+						return {
+							'flat': false,
+							'helix': 2
+						};
+						break;
+					case 'coil':
+						return {
+							'rows': 2,
+							'flat': false
+						};
+						break;
+					case 'ring':
+						return {};
+						break;
+					default:
+						return {};
+						break;						
+				}
+			},
 			getBrowserTransform: function () {
-				var $elem = children.first();
+				var $elem = slideshow3d.children.first();
 
 				if ($elem.css("-webkit-transform") === "none") {
 					return "-webkit-";
@@ -28,45 +68,65 @@ window.slideshow3d = function ($) {
 				}
 			},
 			setStage: function () {
-				var multi = parseInt(children.length / 4);
-				stage.css(transformClass + 'transform', 'translateZ(' + multi * children.first().width() * -1 + 'px)');
+				var multi = parseInt(slideshow3d.children.length / 4);
+				slideshow3d.stage.css(transformClass + 'transform', 'translateZ(' + multi * slideshow3d.children.first().width() * -1 + 'px)');
 			},
 			transform: function () {
-				var length = children.length,
+				var length = slideshow3d.children.length,
 					count = length;
 
 				while (count) {
-					var child = $(children[length - count]),
-						ratio = count / length,
+					var child = $(slideshow3d.children[length - count]),
 						width = child.width() / 6.3,
-						rotate = (length - count) * 360 / length,
-						translate = length * width;
-
+						height = child.height() / 2,
+						rotate = ((length / rows) - count) * 360 / (length / rows),
+						translateZ = length / rows * width,
+						translateY = 0;
+						
+						if(!flat){
+							if(helix > 1){
+								translateY = count%helix * 2;
+								translateZ /= 2;
+							} 
+							else {
+								translateY = count / 4;
+							}
+						}
+						else {
+							if(rows > 1){
+								translateY = parseInt((count-1)/(length / rows)) * 1.5;
+							}
+						}
+						translateY  *= height;
+						
 
 					if (rotate > 180) {
 						rotate -= 360;
 					}
 
 					child
-						.css(transformClass + 'transform', 'rotateY( ' + rotate + 'deg ) translateZ(' + translate + 'px)')
+						.css(transformClass + 'transform', 'rotate' + vertical +'( ' + rotate + 'deg ) translateZ(' + translateZ + 'px) translateY(' + translateY + 'px)')
 						.attr('data-angle', rotate)
 						.attr('data-original-angle', rotate)
-						.attr('data-translate', translate)
+						.attr('data-translateZ', translateZ)
+						.attr('data-translateY', translateY)
 						.addClass(addClass);
 					count--;
 				}
 			},
 			setAngles: function (current) {
-				var length = children.length,
+				var length = slideshow3d.children.length,
 					currentAngle = parseInt(current.attr('data-angle')),
 					count = length;
 
 				while (count) {
-					var child = $(children[length - count]),
+					var child = $(slideshow3d.children[length - count]),
 						rotate = parseInt(child.attr('data-angle')),
 						origRotate = parseInt(child.attr('data-original-angle')),
-						translate = parseInt(child.attr('data-translate'));
+						translateZ = parseInt(child.attr('data-translateZ')),
+						translateY = parseInt(child.attr('data-translateY'));
 
+					console.log(child);
 					if (rotate - currentAngle > 180) {
 						rotate -= 360;
 					} else if (rotate - currentAngle < -180) {
@@ -74,68 +134,92 @@ window.slideshow3d = function ($) {
 					}
 					
 					child
-						.css(transformClass + 'transform', 'rotateY( ' + origRotate + 'deg ) translateZ(' + translate + 'px)')
+						.css(transformClass + 'transform', 'rotate' + vertical +'( ' + origRotate + 'deg ) translateZ(' + translateZ + 'px) translateY(' + translateY + 'px)')
 						.attr('data-angle', rotate);
 					count--;
 				}
 			},
-			getElementTransform: function (elem) {
-				return ($(elem).attr('data-angle'));
-			},
 			setElementTransform: function (elem, clicked) {
-				var	deg = -1 * setup.getElementTransform(clicked),
-					value = 'RotateY(' + deg + 'deg)';
-				$(elem).css(transformClass + 'transform', value);
+				var clicked = $(clicked),
+					deg = -1 * clicked.attr('data-angle'),
+					rotate = parseInt(clicked.attr('data-original-angle')),
+					translateZ = parseInt(clicked.attr('data-translateZ')) * 1.6,
+					translateY = parseInt(clicked.attr('data-translateY'));
+					
+					slideshow3d.children.removeClass('current');
+					clicked.addClass('current');
+					
+				$(elem).css(transformClass + 'transform', 'rotate' + vertical +'( ' + deg + 'deg ) translateY(' + translateY * -1 + 'px)');
+				clicked.css(transformClass + 'transform', 'rotate' + vertical +'( ' + rotate + 'deg ) translateZ(' + translateZ + 'px) translateY(' + translateY + 'px)');
 			}
 		};
 
 	return {
+		container: null,
+		children: null,
+		stage: null,
 		init: function (options) {
-			var container = $(options.container) || null,
-				hidden = options.hidden || false,
-				transition = options.transition || '1';
+			var	hidden = options.hidden || false,
+				transition = options.transition || '1',
+				typeOptions = setup.getShape(options.type);
 
+			
 			addClass = options.class || 'rotateTarget';
-			stage = $(options.stage) || null;
-			children = container.children();
+			
+			slideshow3d.container = $(options.container) || null
+			slideshow3d.stage = $(options.stage) || null;
+			slideshow3d.children = slideshow3d.container.children();
+			
+			helix = parseInt(slideshow3d.children.length / typeOptions.helix) || 1;
+			flat = (typeOptions.flat !== false);
+			rows = typeOptions.rows || 1;
+			vertical = typeOptions.vertical?'X':'Y';
 
 			transformClass = setup.getBrowserTransform();
 
-			stage.height(container.height() + 'px');
-			children.height(container.height() + 'px');
-			children.width(container.width() + 'px');
-			children.css(transformClass + 'backface-visibility', hidden ? 'hidden' : 'visible');
-			children.css('position', 'absolute');
-			children.css(transformClass + 'transition-duration', transition + 's');
+			slideshow3d.stage.height(slideshow3d.container.height() + 'px');
+			slideshow3d.children.height(slideshow3d.container.height() + 'px');
+			slideshow3d.children.width(slideshow3d.container.width() + 'px');
+			slideshow3d.children.css(transformClass + 'backface-visibility', hidden ? 'hidden' : 'visible');
+			slideshow3d.children.css('position', 'absolute');
+			slideshow3d.children.css(transformClass + 'transition-duration', transition + 's');
 
 			setup.transform();
 
-			if (stage !== null) {
+			if (slideshow3d.stage !== null) {
 				setup.setStage();
-				stage.css(transformClass + 'transition-duration', transition + 's');
+				slideshow3d.stage.css(transformClass + 'transition-duration', transition + 's');
 			}
 	
 			$('.' + addClass).click(function (evt) {
-				var that = $(this),
-					multi = parseInt(children.length / 4),
-					rotate = parseInt(that.attr('data-original-angle')),
-					translate = parseInt(that.attr('data-translate')) * 1.6;
-					
-				setup.setElementTransform(container, that);
-				setup.setAngles(that);
+				var that = $(this);		
 				
-				that.css(transformClass + 'transform', 'rotateY( ' + rotate + 'deg ) translateZ(' + translate + 'px)');
+				setup.setAngles(that);		
+				setup.setElementTransform(slideshow3d.container, that);
+				
 			});
 			
 		},
-		reset: function(options){
-			var container = $(options.container) || null,
-				stage = $(options.stage) || null,
-				children = container.children();
-			
-			container.attr('style', '');
-			stage.attr('style', '');
-			children.remove();
+		reset: function(){
+			slideshow3d.container.attr('style', '');
+			slideshow3d.stage.attr('style', '');
+			slideshow3d.children.remove();
+		},
+		next: function(){
+			var current = slideshow3d.container.find('.current').next();
+			if( current.length === 0){
+				current = slideshow3d.children.first();
+			}
+			setup.setAngles(current);
+			setup.setElementTransform(slideshow3d.container, current);
+		},
+		prev: function(){
+			var current = slideshow3d.container.find('.current').prev();
+			if( current.length === 0){
+				current = slideshow3d.children.last();
+			}
+			setup.setAngles(current);
+			setup.setElementTransform(slideshow3d.container, current);
 		}
 	}
 }(jQuery);

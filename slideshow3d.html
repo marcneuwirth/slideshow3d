@@ -3,16 +3,26 @@
 <head> 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 	<title>Slideshow using CSS3 3D Transforms | Marc Neuwirth</title> 
-	<link rel="stylesheet" href="slideshow3d.css" type="text/css" media="screen" />
 	<meta name="description" content="An example photo slideshow using css3 3d transformations">
 	<meta name="author" content="Marc Neuwirth">
+	
 	<script src="modernizr-1.7.min.js"></script>
+	<link rel="stylesheet" href="slideshow3d.css" type="text/css" media="screen" />
 </head> 
 <body> 
 	<h1>Slideshow using CSS3 3D Transforms</h1>
 	<div id="container"> 
-		<label for="search">Search Term</label><input id="search" name="search" type="text" value="puppy"/>
+		<label for="search">Search Term</label><input id="search" name="search" type="text" value="cityscape"/>
 		<label for="per_page">Number of Pictures</label><input id="per_page" name="per_page" type="text" value="16"/>
+		<label for="type">Slideshow Type</label>
+		<select id="type" name="type">
+			<option selected>ring</option>
+			<option>vertical</option>
+			<option>cylinder</option>
+			<option>ribbon</option>
+			<option>double helix</option>
+			<option>coil</option>
+		</select>
 		<input type="button" id="submit" value="Change" />
 		<div id="stage"> 
 			<ul id="shape"></ul>
@@ -24,6 +34,7 @@
 		<p>If you are using Chrome, try going opening 'about:flags' in the address bar and enabling 'GPU Accelerated Compositing'</p>
 		
 	</div>
+	<a href="http://marcneuwirth.com/blog/2011/04/05/creating-a-slideshow-using-css3-3d-transforms/" title="Back to Blog Post">Back to the Blog Post</a>
 	
 </body> 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
@@ -47,33 +58,65 @@ function setup(options) {
             li.append(img);
             li.appendTo('#shape');
         }
-
+		
+		options.type = $('#type').val();
+		if(options.type == 'vertical'){
+			$('#container').css('-webkit-perspective-origin', '100% 20%');
+		}
+		else {
+			$('#container').css('-webkit-perspective-origin', '50% 20%');
+		}
+		
         slideshow3d.init(options);
     });
 }
 
 $(document).ready(function () {
+
 	var options = {
         'container': '#shape',
-        'stage': '#stage',
-        'class': 'zoomTarget',
-        'transition': '2',
-        'hidden': false
+        'stage': '#stage'
     };
+	
     setup(options);
 
     $('#submit').click(function () {
-		slideshow3d.reset(options);
+		slideshow3d.reset();
         setup(options);
     });
 	
-	$('input').bind('keypress', function (e) {
+	$('body').bind('keypress', function (e) {
 		var code = e.keyCode || e.which;
+		//enter
 		if(code == 13) {
-			slideshow3d.reset(options);
+			slideshow3d.reset();
 			setup(options);
 		}
 	});
+	
+	$(document).keydown(function(event) {
+		//left arrow
+		if(event.keyCode === 37) {
+			slideshow3d.prev();
+		}
+		//right arrow
+		else if(event.keyCode === 39) {
+			slideshow3d.next();
+		}
+	});
 });			
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9077914-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
 </script>
 </html> 
