@@ -1,9 +1,10 @@
 body {
-	background-color: black;
-	color: white;
-	font-family: "Lucida Grande", Verdana, Arial;
+    width: 960px;
+    margin: 0 auto;
+    background: #111;
+	color: #000;
+	font-family:  Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	background: #000;
 }
 .no-csstransforms3d #container {
 	display: none;
@@ -16,8 +17,6 @@ body {
 
 
 #container {
-	width: 100%;
-	overflow: hidden;
    
    -o-perspective: 1000;
 	-moz-perspective: 1000;
@@ -26,8 +25,13 @@ body {
 	
    -o-perspective-origin: 50% 20%;
 	-moz-perspective-origin: 50% 20%;
-	-webkit-perspective-origin: 50% 20%;
+	-webkit-perspective-origin: 50% 40%;
 	perspective-origin: 50% 20%;
+    
+    -o-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
 }
 
 #stage {
@@ -56,4 +60,36 @@ body {
 	-moz-transition-duration: 1s;
 	-webkit-transition-duration: 1s;
 	transition-duration: 1s;
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+    text-shadow: 0px 0px 2px #fff, 0px 0px 2px #333;
+    text-transform: uppercase;
+    line-height: 40px;
+    font-size: 36px;
+}
+
+#controls {
+    margin: 10px auto;
+    padding: 15px 10px;
+    text-align: center;
+    background: #005982;
+    color: #fff;
+    border: 1px solid #fff;
+    -webkit-box-shadow: 0 0 5px #fff;
+}
+
+#controls input {
+    margin: 0 20px 0 10px;   
+}
+
+#controls a {
+    color: #fff;
+	margin-left: 5px;
+}
+
+#submit {
+    background: #fff;
 }

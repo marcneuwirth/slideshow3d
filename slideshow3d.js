@@ -8,30 +8,31 @@ window.slideshow3d = function ($) {
 		setup = {
 			getShape: function(type){
 				switch(type){
-					case 'vertical':
+					case 'Vertical':
 						return {
 							'vertical': true
 						};
-					case 'cylinder':
+					case 'Cylinder':
 						return {
-							'rows': 2
+							'rows': 3
 						};
-					case 'ribbon':
+					case 'Ribbon':
 						return {
 							'flat': false,
-							'helix': 1
+							'helix': 1,
+                            'rows': 2
 						};
-					case 'double helix':
+					case 'Double Helix':
 						return {
 							'flat': false,
 							'helix': 2
 						};
-					case 'coil':
+					case 'Coil':
 						return {
 							'rows': 2,
 							'flat': false
 						};
-					case 'ring':
+					case 'Ring':
 						return {};
 					default:
 						return {};					
@@ -62,7 +63,7 @@ window.slideshow3d = function ($) {
 			},
 			setStage: function () {
 				var multi = parseInt(slideshow3d.children.length / 4, 10);
-				slideshow3d.stage.css(transformClass + 'transform', 'translateZ(' + multi * slideshow3d.children.first().width() * -1 + 'px)');
+				slideshow3d.stage.css(transformClass + 'transform', 'translateZ(' + multi * slideshow3d.children.first().width() / rows * -1 + 'px)');
 			},
 			transform: function () {
 				var length = slideshow3d.children.length,
@@ -119,7 +120,6 @@ window.slideshow3d = function ($) {
 						translateZ = parseInt(child.attr('data-translateZ'), 10),
 						translateY = parseInt(child.attr('data-translateY'), 10);
 
-					console.log(child);
 					if (rotate - currentAngle > 180) {
 						rotate -= 360;
 					} else if (rotate - currentAngle < -180) {
@@ -163,14 +163,14 @@ window.slideshow3d = function ($) {
 			slideshow3d.stage = $(options.stage) || null;
 			slideshow3d.children = slideshow3d.container.children();
 			
-			helix = parseInt(slideshow3d.children.length / typeOptions.helix, 100) || 1;
+			helix = parseInt(slideshow3d.children.length / typeOptions.helix, 10) || 1;
 			flat = (typeOptions.flat !== false);
 			rows = typeOptions.rows || 1;
 			vertical = typeOptions.vertical?'X':'Y';
 
 			transformClass = setup.getBrowserTransform();
 
-			slideshow3d.stage.height(slideshow3d.container.height() + 'px');
+			slideshow3d.stage.height(slideshow3d.container.height() * 2 + 'px');
 			slideshow3d.children.height(slideshow3d.container.height() + 'px');
 			slideshow3d.children.width(slideshow3d.container.width() + 'px');
 			slideshow3d.children.css(transformClass + 'backface-visibility', hidden ? 'hidden' : 'visible');

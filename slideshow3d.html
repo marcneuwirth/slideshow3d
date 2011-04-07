@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-	<title>Slideshow using CSS3 3D Transforms | Marc Neuwirth</title> 
+	<title>Photo Slideshow using CSS3 3D Transforms | Marc Neuwirth</title> 
 	<meta name="description" content="An example photo slideshow using css3 3d transformations">
 	<meta name="author" content="Marc Neuwirth">
 	
@@ -10,32 +10,33 @@
 	<link rel="stylesheet" href="slideshow3d.css" type="text/css" media="screen" />
 </head> 
 <body> 
-	<h1>Slideshow using CSS3 3D Transforms</h1>
-	<div id="container"> 
-		<label for="search">Search Term</label><input id="search" name="search" type="text" value="puppy"/>
-		<label for="per_page">Number of Pictures</label><input id="per_page" name="per_page" type="text" value="16"/>
-		<label for="type">Slideshow Type</label>
-		<select id="type" name="type">
-			<option selected>ring</option>
-			<option>vertical</option>
-			<option>cylinder</option>
-			<option>ribbon</option>
-			<option>double helix</option>
-			<option>coil</option>
-		</select>
-		<input type="button" id="submit" value="Change" />
-		<div id="stage"> 
+	<section id="container">
+        <h1>Photo Slideshow using <strong>CSS3 3D Transforms</strong></h1>
+        <section id="controls">
+		    <label for="search">Search Term</label><input id="search" name="search" type="text" value="puppy"/>
+		    <label for="per_page">Number of Pictures</label><input id="per_page" name="per_page" type="text" value="16"/>
+		    <label for="type">Slideshow Type</label>
+		    <select id="type" name="type">
+    		    <option selected>Ring</option>
+        	    <option>Vertical</option>
+        		<option>Cylinder</option>
+        		<option>Ribbon</option>
+        		<option>Double Helix</option>
+        		<option>Coil</option>
+        	</select>
+    	   	<input type="button" id="submit" value="Change" />
+    		<a href="http://marcneuwirth.com/blog/2011/04/05/creating-a-slideshow-using-css3-3d-transforms/" title="Blog Post Part 1">Part 1</a>
+			<a href="http://marcneuwirth.com/blog/2011/04/05/slideshow-with-css-3d-transforms-part-2-playing-with-shapes/" title="Blog Post Part 2">Part 2</a>
+        </section>
+		<section id="stage"> 
 			<ul id="shape"></ul>
-		</div> 
-	</div>   
-	<div id="no-support">
+		</section> 
+	</section>   
+	<section id="no-support">
 		<img src="http://marcneuwirth.com/wp-content/uploads/2011/04/slideshow3d.jpg" alt="3D Slideshow using CSS3 Transforms" title="slideshow3d" width="600" height="215"/>
 		<p>Unfortunately, your browser doesn't support 3D CSS Transforms yet.</p>
 		<p>If you are using Chrome, try going opening 'about:flags' in the address bar and enabling 'GPU Accelerated Compositing'</p>
-		
-	</div>
-	<a href="http://marcneuwirth.com/blog/2011/04/05/creating-a-slideshow-using-css3-3d-transforms/" title="Back to Blog Post">Back to the Blog Post</a>
-	
+	</section>
 </body> 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
 <script type="text/javascript" src="slideshow3d.js"></script>
@@ -60,7 +61,7 @@ function setup(options) {
         }
 		
 		options.type = $('#type').val();
-		if(options.type == 'vertical'){
+		if(options.type == 'Vertical'){
 			$('#container').css('-webkit-perspective-origin', '100% 20%');
 		}
 		else {
