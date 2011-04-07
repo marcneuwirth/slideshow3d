@@ -78,7 +78,11 @@ h1 {
     background: #005982;
     color: #fff;
     border: 1px solid #fff;
+    
+    -o-box-shadow: 0 0 5px #fff;
+    -moz-box-shadow: 0 0 5px #fff;
     -webkit-box-shadow: 0 0 5px #fff;
+    box-shadow: 0 0 5px #fff;
 }
 
 #controls input {
