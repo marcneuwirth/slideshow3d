@@ -14,8 +14,6 @@ body {
 	display: none;
 }
 
-
-
 #container {
    
    -o-perspective: 1000;
@@ -71,7 +69,12 @@ h1 {
     font-size: 36px;
 }
 
-#controls {
+img {
+    margin: auto;
+    text-align: center;
+}
+
+#controls, #no-support {
     margin: 10px auto;
     padding: 15px 10px;
     text-align: center;
