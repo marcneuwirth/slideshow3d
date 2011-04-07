@@ -12,36 +12,29 @@ window.slideshow3d = function ($) {
 						return {
 							'vertical': true
 						};
-						break;
 					case 'cylinder':
 						return {
 							'rows': 2
 						};
-						break;
 					case 'ribbon':
 						return {
 							'flat': false,
 							'helix': 1
 						};
-						break;
 					case 'double helix':
 						return {
 							'flat': false,
 							'helix': 2
 						};
-						break;
 					case 'coil':
 						return {
 							'rows': 2,
 							'flat': false
 						};
-						break;
 					case 'ring':
 						return {};
-						break;
 					default:
-						return {};
-						break;						
+						return {};					
 				}
 			},
 			getBrowserTransform: function () {
@@ -68,7 +61,7 @@ window.slideshow3d = function ($) {
 				}
 			},
 			setStage: function () {
-				var multi = parseInt(slideshow3d.children.length / 4);
+				var multi = parseInt(slideshow3d.children.length / 4, 10);
 				slideshow3d.stage.css(transformClass + 'transform', 'translateZ(' + multi * slideshow3d.children.first().width() * -1 + 'px)');
 			},
 			transform: function () {
@@ -94,7 +87,7 @@ window.slideshow3d = function ($) {
 						}
 						else {
 							if(rows > 1){
-								translateY = parseInt((count-1)/(length / rows)) * 1.5;
+								translateY = parseInt((count-1)/(length / rows), 10) * 1.5;
 							}
 						}
 						translateY  *= height;
@@ -116,15 +109,15 @@ window.slideshow3d = function ($) {
 			},
 			setAngles: function (current) {
 				var length = slideshow3d.children.length,
-					currentAngle = parseInt(current.attr('data-angle')),
+					currentAngle = parseInt(current.attr('data-angle'), 10),
 					count = length;
 
 				while (count) {
 					var child = $(slideshow3d.children[length - count]),
-						rotate = parseInt(child.attr('data-angle')),
-						origRotate = parseInt(child.attr('data-original-angle')),
-						translateZ = parseInt(child.attr('data-translateZ')),
-						translateY = parseInt(child.attr('data-translateY'));
+						rotate = parseInt(child.attr('data-angle'), 10),
+						origRotate = parseInt(child.attr('data-original-angle'), 10),
+						translateZ = parseInt(child.attr('data-translateZ'), 10),
+						translateY = parseInt(child.attr('data-translateY'), 10);
 
 					console.log(child);
 					if (rotate - currentAngle > 180) {
@@ -140,11 +133,11 @@ window.slideshow3d = function ($) {
 				}
 			},
 			setElementTransform: function (elem, clicked) {
-				var clicked = $(clicked),
-					deg = -1 * clicked.attr('data-angle'),
-					rotate = parseInt(clicked.attr('data-original-angle')),
-					translateZ = parseInt(clicked.attr('data-translateZ')) * 1.6,
-					translateY = parseInt(clicked.attr('data-translateY'));
+				clicked = $(clicked);
+		        var deg = -1 * clicked.attr('data-angle'),
+					rotate = parseInt(clicked.attr('data-original-angle'), 10),
+					translateZ = parseInt(clicked.attr('data-translateZ'), 10) * 1.6,
+					translateY = parseInt(clicked.attr('data-translateY'), 10);
 					
 					slideshow3d.children.removeClass('current');
 					clicked.addClass('current');
@@ -164,13 +157,13 @@ window.slideshow3d = function ($) {
 				typeOptions = setup.getShape(options.type);
 
 			
-			addClass = options.class || 'rotateTarget';
+			addClass = options.addClass || 'rotateTarget';
 			
-			slideshow3d.container = $(options.container) || null
+			slideshow3d.container = $(options.container) || null;
 			slideshow3d.stage = $(options.stage) || null;
 			slideshow3d.children = slideshow3d.container.children();
 			
-			helix = parseInt(slideshow3d.children.length / typeOptions.helix) || 1;
+			helix = parseInt(slideshow3d.children.length / typeOptions.helix, 100) || 1;
 			flat = (typeOptions.flat !== false);
 			rows = typeOptions.rows || 1;
 			vertical = typeOptions.vertical?'X':'Y';
@@ -221,5 +214,5 @@ window.slideshow3d = function ($) {
 			setup.setAngles(current);
 			setup.setElementTransform(slideshow3d.container, current);
 		}
-	}
+	};
 }(jQuery);
