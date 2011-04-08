@@ -10,33 +10,61 @@ window.slideshow3d = function ($) {
 				switch(type){
 					case 'Vertical':
 						return {
-							vertical: true
+							flat: true,
+                            rows: 1,
+                            helix: 1,
+                            vertical: true
 						};
 					case 'Cylinder':
 						return {
-							rows: 3
+                            flat: true,
+							rows: 3,
+                            helix: 1,
+                            vertical: false
+						};
+    				case 'Tall Cylinder':
+						return {
+                            flat: true,
+							rows: 6,
+                            helix: 1,
+                            vertical: false
 						};
 					case 'Ribbon':
 						return {
 							flat: false,
-							helix: 1,
-                            rows: 2
+							rows: 2,
+                            helix: 1,
+                            vertical: false
 						};
 					case 'Double Helix':
 						return {
 							flat: false,
-							helix: 2
+                            rows: 1,
+							helix: 2,
+                            vertical: false
 						};
 					case 'Coil':
 						return {
-							rows: 2,
-                            flat: false,
-                            helix: 0
+							flat: false,
+                            rows: 2,
+							helix: 0,
+                            vertical: false
+						};
+					case 'Big Coil':
+						return {
+							flat: false,
+                            rows: 1,
+							helix: 0,
+                            vertical: false
+                            
 						};
 					case 'Ring':
 						return {
-                            flat: true    
-                        };
+							flat: true,
+                            row: 1,
+                            helix: 1,
+                            vertical: false
+						};
 					default:
 						return {};					
 				}
@@ -80,23 +108,23 @@ window.slideshow3d = function ($) {
 						translateZ = length / rows * width,
 						translateY = 0;
 						
-						if(!flat){
-							if(helix > 1){
-								translateY = count%helix * 2;
-								translateZ /= 2;
-							} 
-							else {
-								translateY = count / 4;
-							}
-						}
+					if(!flat){
+						if(helix > 1){
+							translateY = count%helix * 2;
+							translateZ /= 2;
+						} 
 						else {
-							if(rows > 1){
-								translateY = parseInt((count-1)/(length / rows), 10) * 1.5;
-							}
+							translateY = count / 4;
 						}
-						translateY  *= height;
-						
+                    }
+					else {
+						if(rows > 1){
+							translateY = parseInt((count-1)/(length / rows), 10) * 1.5;
+						}
+					}
+					translateY  *= height;						
 
+                    rotate = rotate % 360;
 					if (rotate > 180) {
 						rotate -= 360;
 					}
@@ -137,7 +165,7 @@ window.slideshow3d = function ($) {
 			},
 			setElementTransform: function (elem, clicked) {
 				clicked = $(clicked);
-		        var deg = -1 * clicked.attr('data-angle'),
+				var deg = -1 * clicked.attr('data-angle'),
 					rotate = parseInt(clicked.attr('data-original-angle'), 10),
 					translateZ = parseInt(clicked.attr('data-translateZ'), 10) * 1.6,
 					translateY = parseInt(clicked.attr('data-translateY'), 10);
@@ -155,27 +183,27 @@ window.slideshow3d = function ($) {
 		children: null,
 		stage: null,
 		init: function (options) {
-            
-            if( typeof options !== 'object' ){
-    		    options	= {};
-		    }
+			
+			if( typeof options !== 'object' ){
+				options	= {};
+			}
 
-		    // set default values
-		    options	= $.extend( {}, {
-			    hidden		: false,
-			    transition		: '1',
-			    type	: 'Ring',
-			    container	: null,
-                stage   : null,
-                addClass: 'rotateTarget',
-                flat: true,
-                rows: 1,
-                vertical : false,
-                helix: 1
-		    }, options);
-            
-            options = $.extend(options, setup.getShape(options.type));
-            
+			// set default values
+			options	= $.extend( {}, {
+				hidden		: false,
+				transition		: '1',
+				type	: 'Ring',
+				container	: null,
+				stage   : null,
+				addClass: 'rotateTarget',
+				flat: true,
+				rows: 1,
+				vertical : false,
+				helix: 1
+			}, options);
+			
+			options = $.extend(options, setup.getShape(options.type));
+			
 			var	hidden = options.hidden;
 				transition = options.transition;
 
@@ -186,9 +214,9 @@ window.slideshow3d = function ($) {
 			slideshow3d.stage = $(options.stage);
 			slideshow3d.children = slideshow3d.container.children();
 			
-			helix = parseInt(slideshow3d.children.length / options.helix, 10);
+			helix = (options.helix > 0) ? parseInt(slideshow3d.children.length / options.helix, 10) : 1;
 			flat = (options.flat !== false);
-			rows = options.rows;
+			rows = (options.rows > 0) ? options.rows : 1;
 			vertical = options.vertical?'X':'Y';
 
 			transformClass = setup.getBrowserTransform();
