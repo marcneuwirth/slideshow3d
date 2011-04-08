@@ -73,7 +73,11 @@ function setup(options) {
 }
 
 $(document).ready(function () {
-
+    
+    //Fix for weird false negative on Safari
+    if(!Modernizr.csstransforms3d && $('html').css('-webkit-perspective') == 'none'){
+        $('html').removeClass('no-csstransforms3d').addClass('csstransforms3d');    
+    }    
 	var options = {
         container: '#shape',
         stage: '#stage'

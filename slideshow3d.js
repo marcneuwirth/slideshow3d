@@ -30,7 +30,8 @@ window.slideshow3d = function ($) {
 					case 'Coil':
 						return {
 							rows: 2,
-							flat: false
+                            flat: false,
+                            helix: 0
 						};
 					case 'Ring':
 						return {
