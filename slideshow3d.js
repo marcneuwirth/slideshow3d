@@ -10,30 +10,32 @@ window.slideshow3d = function ($) {
 				switch(type){
 					case 'Vertical':
 						return {
-							'vertical': true
+							vertical: true
 						};
 					case 'Cylinder':
 						return {
-							'rows': 3
+							rows: 3
 						};
 					case 'Ribbon':
 						return {
-							'flat': false,
-							'helix': 1,
-                            'rows': 2
+							flat: false,
+							helix: 1,
+                            rows: 2
 						};
 					case 'Double Helix':
 						return {
-							'flat': false,
-							'helix': 2
+							flat: false,
+							helix: 2
 						};
 					case 'Coil':
 						return {
-							'rows': 2,
-							'flat': false
+							rows: 2,
+							flat: false
 						};
 					case 'Ring':
-						return {};
+						return {
+                            flat: true    
+                        };
 					default:
 						return {};					
 				}
@@ -152,21 +154,41 @@ window.slideshow3d = function ($) {
 		children: null,
 		stage: null,
 		init: function (options) {
-			var	hidden = options.hidden || false,
-				transition = options.transition || '1',
-				typeOptions = setup.getShape(options.type);
+            
+            if( typeof options !== 'object' ){
+    		    options	= {};
+		    }
+
+		    // set default values
+		    options	= $.extend( {}, {
+			    hidden		: false,
+			    transition		: '1',
+			    type	: 'Ring',
+			    container	: null,
+                stage   : null,
+                addClass: 'rotateTarget',
+                flat: true,
+                rows: 1,
+                vertical : false,
+                helix: 1
+		    }, options);
+            
+            options = $.extend(options, setup.getShape(options.type));
+            
+			var	hidden = options.hidden;
+				transition = options.transition;
 
 			
-			addClass = options.addClass || 'rotateTarget';
+			addClass = options.addClass;
 			
-			slideshow3d.container = $(options.container) || null;
-			slideshow3d.stage = $(options.stage) || null;
+			slideshow3d.container = $(options.container);
+			slideshow3d.stage = $(options.stage);
 			slideshow3d.children = slideshow3d.container.children();
 			
-			helix = parseInt(slideshow3d.children.length / typeOptions.helix, 10) || 1;
-			flat = (typeOptions.flat !== false);
-			rows = typeOptions.rows || 1;
-			vertical = typeOptions.vertical?'X':'Y';
+			helix = parseInt(slideshow3d.children.length / options.helix, 10);
+			flat = (options.flat !== false);
+			rows = options.rows;
+			vertical = options.vertical?'X':'Y';
 
 			transformClass = setup.getBrowserTransform();
 
